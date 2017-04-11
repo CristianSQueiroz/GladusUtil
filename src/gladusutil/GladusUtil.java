@@ -5,7 +5,7 @@
  */
 package gladusutil;
 
-import java.util.HashMap;
+import gladusutil.Components.HashMap;
 
 /**
  *
@@ -45,7 +45,7 @@ public class GladusUtil {
         return s1.toUpperCase().indexOf(s2.toUpperCase());
     }
 
-    public static HashMap getValueNumeric(int inicialPos, String comand) {
+    public static HashMap getValueNumeric(int inicialPos, String comand, boolean isForward) {
         boolean valueFounded = false;
         HashMap hashMap = new HashMap();
         int pos = inicialPos;
@@ -56,14 +56,22 @@ public class GladusUtil {
                 valueFounded = true;
                 inicialPosValue = pos;
             } else {
-                pos++;
+                if (isForward) {
+                    pos++;
+                } else {
+                    pos--;
+                }
             }
         }
 
         while (valueFounded) {
-            if (pos < comand.length()) {
+            if (pos < comand.length() - 1 && pos > 0) {
                 if (isAValueNumeric(pos, comand)) {
-                    pos++;
+                    if (isForward) {
+                        pos++;
+                    } else {
+                        pos--;
+                    }
                 } else {
                     valueFounded = false;
                     finalPosValue = pos;
@@ -74,10 +82,24 @@ public class GladusUtil {
             }
 
         }
+        if (inicialPosValue == finalPosValue) {
+            hashMap.put("VALUE", String.valueOf(comand.charAt(inicialPosValue)));
+        } else {
+            if (isForward) {
+                hashMap.put("VALUE", comand.substring(inicialPosValue, finalPosValue + 1));
+            } else {
+                hashMap.put("VALUE", comand.substring(finalPosValue, inicialPosValue + 1));
+            }
+        }
 
-        hashMap.put("VALUE", comand.substring(inicialPosValue, finalPosValue));
-        hashMap.put("LAST_POS", pos < comand.length() ? pos : comand.length());
+        hashMap.put("LAST_POS", pos < comand.length() - 1 ? pos : comand.length() - 1);
+        hashMap.put("INICIAL_POS", pos);
         return hashMap;
+
+    }
+
+    public static HashMap getValueNumeric(int inicialPos, String comand) {
+        return getValueNumeric(inicialPos, comand, true);
 
     }
 
