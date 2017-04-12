@@ -11,9 +11,13 @@ import static gladusutil.GladusUtil.getInteger;
  *
  * @author csqueiroz
  */
-public class HashMap extends java.util.HashMap<Object, Object>{
-    
-    public int getValueAsInt(Object key){
+public class HashMap extends java.util.HashMap<Object, Object> {
+
+    public int getValueAsInt(Object key) {
         return getInteger(get(key).toString());
+    }
+
+    public String getValueAsString(Object key) {
+        return get(key).toString();
     }
 }
